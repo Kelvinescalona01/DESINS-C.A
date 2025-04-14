@@ -26,6 +26,7 @@ header{
 }
 .logo{
     margin: 0;
+    justify-content: baseline;
     font-size: 1.8rem;
     font-weight: bold;
     text-decoration: none;
@@ -407,11 +408,12 @@ footer{
 }
 
 .li.active{
-  display: block;
-    flex-direction: column;
+    display: block;
     transform: translateY(0);
+    flex-direction: column;
+    z-index: 14;
+    
 }
-
 
 .menuD{
     position: relative;
@@ -483,7 +485,7 @@ footer{
 }
 @media(max-width:480px){
     .service1, .service3,.service4, .service5, .service6, .service7{
-        width: 430px;
+        width: 380px;
         align-items: center;
         margin: auto;
         display:block;

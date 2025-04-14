@@ -1,14 +1,25 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navList = document.querySelector(".nav-list");
 
-document.getElementById('form').addEventListener('Submit', e => {
-    e.prevetDefault();
-    const comentario = document.getElementById('comentarios').value;
-    const nuevoElemento = document.createElement('p');
-    nuevoElemento.textContent = `comentarios: ${comentario}`;
-    document.getElementById('resultado').appendChild(nuevoElemento);
-    alert('hola')
+    menuToggle.addEventListener("click", function () {
+        navList.classList.toggle("active");
+    });
+
+    // Acción de compra exitosa
+    const buyButtons = document.querySelectorAll(".compra");
+    const successMessage = document.createElement("div");
+    successMessage.classList.add("success-message");
+    successMessage.innerText = "¡Compra realizada con éxito!";
+
+    buyButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            button.parentElement.appendChild(successMessage);
+            successMessage.classList.add("show-success");
+
+            setTimeout(() => {
+                successMessage.classList.remove("show-success");
+            }, 3000);
+        });
+    });
 });
-
-document.querySelector('.linea').addEventListener('click', function(){
-    const menu = document.querySelector('.nav-list li');
-    menu.classList.toggle('active');
-})
