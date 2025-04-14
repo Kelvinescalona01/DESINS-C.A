@@ -129,7 +129,7 @@ header{
 @media(max-width:468px){
     .formu{
         margin: auto;
-        width: 400px;
+        width: 380px;
         align-items: center;
         flex-direction: column;
         display: flex;
