@@ -125,54 +125,168 @@ document.addEventListener("DOMContentLoaded", () => {
 //prueva
 
 
-/*
-// scripts.js
-document.addEventListener("DOMContentLoaded", () => {
-    const chatForm = document.getElementById("chat-form");
-    const userInput = document.getElementById("user-input");
-    const chatBox = document.getElementById("chat-box");
+        document.addEventListener("DOMContentLoaded", () => {
+            const chatForm = document.getElementById("chat-form");
+            const userInput = document.getElementById("user-input");
+            const chatBox = document.getElementById("chat-box");
+            const reiniciarChatBtn = document.getElementById("reiniciar-chat");
 
-    // Función para agregar un mensaje al chat
-    const agregarMensaje = (mensaje, clase) => {
-        const mensajeDiv = document.createElement("div");
-        mensajeDiv.classList.add("message", clase);
-        mensajeDiv.textContent = mensaje;
-        chatBox.appendChild(mensajeDiv);
-        chatBox.scrollTop = chatBox.scrollHeight; // Hacer scroll hasta el final
-    };
+            const agregarMensaje = (mensaje, clase) => {
+                const mensajeDiv = document.createElement("div");
+                mensajeDiv.classList.add("message", clase);
+                mensajeDiv.textContent = mensaje;
+                chatBox.appendChild(mensajeDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            };
 
-    // Función para enviar el mensaje al API de OpenAI
-    const enviarMensajeAI = async (mensaje) => {
-        try {
-            const respuesta = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": Bearer YOUR_API_KEY
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [{ role: "user", content: mensaje }]
-                })
+            const enviarMensajeAI = async (mensaje) => {
+                agregarMensaje("Pensando...", "bot");
+                try {
+                    const respuesta = await fetch("https://api.cohere.ai/v1/chat", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer 6c7d4bbc-66d7-4a65-b4f5-3889988874b2"
+                        },
+                        body: JSON.stringify({
+                            message: mensaje,
+                            model: "command-r",
+                            temperature: 0.7,
+                            max_tokens: 150,
+                        })
+                    });
+
+                    const datos = await respuesta.json();
+                    chatBox.lastChild.remove();
+                    if (datos && datos.replies && datos.replies.length > 0 && datos.replies[0].text) {
+                        const respuestaBot = datos.replies[0].text;
+                        agregarMensaje(respuestaBot, "bot");
+                    } else {
+                        agregarMensaje("Respuesta inesperada del asistente.", "bot");
+                    }
+                } catch (error) {
+                    chatBox.lastChild.textContent = "Error al conectar con el asistente. Intenta nuevamente.";
+                    console.error("Error:", error);
+                }
+            };
+
+            chatForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const mensaje = userInput.value.trim();
+                if (mensaje) {
+                    agregarMensaje(mensaje, "user");
+                    enviarMensajeAI(mensaje);
+                    userInput.value = "";
+                }
             });
 
-            const datos = await respuesta.json();
-            const respuestaBot = datos.choices[0].message.content;
-            agregarMensaje(respuestaBot, "bot");
-        } catch (error) {
-            agregarMensaje("Error al conectar con el asistente. Intenta nuevamente.", "bot");
-            console.error("Error:", error);
-        }
-    };
+            reiniciarChatBtn.addEventListener("click", () => {
+                chatBox.innerHTML = "";
+                agregarMensaje("Chat reiniciado.", "bot");
+            });
 
-    // Manejar el envío del formulario
-    chatForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const mensaje = userInput.value.trim();
-        if (mensaje) {
-            agregarMensaje(mensaje, "user");
-            enviarMensajeAI(mensaje);
-            userInput.value = ""; // Limpiar el campo de entrada
-        }
+            const analizarSentimiento = async (texto) => {
+                try {
+                    const respuesta = await fetch("https://api.cohere.ai/v1/classify", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer 6c7d4bbc-66d7-4a65-b4f5-3889988874b2"
+                        },
+                        body: JSON.stringify({
+                            inputs: [texto],
+                            model: "embed-english-light-v2.0",
+                        })
+                    });
+                    const datos = await respuesta.json();
+                    if (datos && datos.results && datos.results.length > 0) {
+                        return datos.results[0].predictions[0];
+                    }
+                    return "No se pudo analizar el sentimiento.";
+                } catch (error) {
+                    console.error("Error al analizar el sentimiento:", error);
+                    return "Error al analizar el sentimiento.";
+                }
+            };
+
+            const traducirTexto = async (texto, idiomaDestino = "es") => {
+                try {
+                    const respuesta = await fetch("https://api.cohere.ai/v1/translate", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer 6c7d4bbc-66d7-4a65-b4f5-3889988874b2"
+                        },
+                        body: JSON.stringify({
+                            texts: [texto],
+                            target_language: idiomaDestino,
+                            model: "large",
+                        })
+                    });
+                    const datos = await respuesta.json();
+                    if (datos && datos.results && datos.results.length > 0) {
+                        return datos.results[0].translated_text;
+                    }
+                    return "No se pudo traducir el texto.";
+                } catch (error) {
+                    console.error("Error al traducir el texto:", error);
+                    return "Error al traducir el texto.";
+                }
+            };
+
+            userInput.addEventListener("keypress", async (e) => {
+                if (e.key === "Enter") {
+                    const mensaje = userInput.value.trim();
+                    if (mensaje.toLowerCase().startsWith("analiza:")) {
+                        const textoAAnalizar = mensaje.substring("analiza:".length).trim();
+                        const sentimiento = await analizarSentimiento(textoAAnalizar);
+                        agregarMensaje(`Sentimiento: ${sentimiento}`, "bot");
+                        userInput.value = "";
+                    } else if (mensaje.toLowerCase().startsWith("traduce a ")) {
+                        const partes = mensaje.split("traduce a ");
+                        if (partes.length > 1) {
+                            const [idioma, textoATraducir] = partes[1].split(":");
+                            if (textoATraducir && idioma) {
+                                const textoTraducido = await traducirTexto(textoATraducir.trim(), idioma.trim());
+                                agregarMensaje(`Traducción (${idioma.trim()}): ${textoTraducido}`, "bot");
+                                userInput.value = "";
+                            } else {
+                                agregarMensaje("Formato de traducción incorrecto. Ejemplo: traduce a fr: Hola", "bot");
+                            }
+                        } else {
+                            agregarMensaje("Formato de traducción incorrecto. Ejemplo: traduce a fr: Hola", "bot");
+                        }
+                    }
+                }
+            });
+        });
+
+
+
+        //carga
+
+        const dynamicLoaderOverlay = document.getElementById('dynamic-loader-overlay');
+const links = document.querySelectorAll('a[data-link]');
+
+function showDynamicLoader() {
+    dynamicLoaderOverlay.style.display = 'flex';
+}
+
+function hideDynamicLoader() {
+    dynamicLoaderOverlay.style.display = 'none';
+}
+
+// Ocultar el loader al inicio
+hideDynamicLoader();
+
+links.forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+        showDynamicLoader();
+        const href = this.getAttribute('href');
+        window.location.href = href;
     });
-});*/
+});
+
+window.addEventListener('load', hideDynamicLoader);
+window.addEventListener('DOMContentLoaded', hideDynamicLoader);

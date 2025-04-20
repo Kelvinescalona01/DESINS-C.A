@@ -873,3 +873,175 @@ background: rgb(62, 240, 136);
 .eliminar:hover{
     background-color: #ff79d2;
 }
+
+/* Estilos para el loader dinámico (Green Orbit Spinner) con 8 órbitas */
+#dynamic-loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegurar que esté en la parte superior */
+}
+
+.loader-container {
+    text-align: center;
+}
+
+.spinner {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: auto;
+}
+
+.central {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    background: url('logo/image.png') no-repeat center center; /* Asegúrate de que la ruta sea correcta */
+    background-size: contain;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.orbit-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: rotate 1.5s linear infinite;
+}
+
+.orbit {
+    position: absolute;
+    width: 12px; /* Reducir el tamaño para que quepan 8 */
+    height: 12px;
+    background-color: #28a745; /* Verde */
+    border-radius: 50%;
+}
+
+/* Posicionamiento de las ocho órbitas distribuidas circularmente */
+.orbit.one   { top: 15%; left: 50%; transform: translate(-50%, -50%); } /* Arriba */
+.orbit.two   { top: 50%; left: 85%; transform: translate(-50%, -50%); } /* Derecha-Arriba */
+.orbit.three { top: 85%; left: 50%; transform: translate(-50%, -50%); } /* Abajo */
+.orbit.four  { top: 50%; left: 15%; transform: translate(-50%, -50%); } /* Izquierda-Abajo */
+.orbit.five  { top: 30%; left: 70%; transform: translate(-50%, -50%); } /* Derecha-Medio-Arriba */
+.orbit.six   { top: 70%; left: 70%; transform: translate(-50%, -50%); } /* Derecha-Medio-Abajo */
+.orbit.seven { top: 70%; left: 30%; transform: translate(-50%, -50%); } /* Izquierda-Medio-Abajo */
+.orbit.eight { top: 30%; left: 30%; transform: translate(-50%, -50%); } /* Izquierda-Medio-Arriba */
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #28a745;
+}
+
+    /* Estilos adicionales para la animación y el botón de reinicio */
+    #asistente-ia {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .floating-icon {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        animation: float 3s infinite alternate; /* Animación de flotar */
+        opacity: 0.8;
+        z-index: 10; /* Asegurar que esté por encima del contenido */
+        /* Centrar la imagen dentro del contenedor */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .floating-icon img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 50%; /* Hacer la imagen circular si el logo lo permite */
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-20px); }
+    }
+
+    #reiniciar-chat {
+        background-color: #28a745; /* Un color distintivo */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        margin-top: 10px;
+    }
+
+    #reiniciar-chat:hover {
+        background-color: #218838;
+    }
+
+    .message {
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+    }
+
+    .user {
+        background-color: #f0f0f0;
+        text-align: right;
+    }
+
+    .bot {
+        background-color: #e0f7fa;
+        text-align: left;
+    }
+
+    #chat-container {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        height: 300px; /* Altura fija para la caja de chat */
+        overflow-y: auto; /* Barra de scroll cuando el contenido excede la altura */
+    }
+
+    #chat-form {
+        display: flex;
+    }
+
+    #user-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+        font-size: 1em;
+    }
+
+    #chat-form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    #chat-form button:hover {
+        background-color: #0056b3;
+    }
