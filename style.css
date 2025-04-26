@@ -699,7 +699,6 @@ footer{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    heigght:800px;
 }
 #user-input:focus{
     border:1.0px #06ef7b solid;
@@ -1034,7 +1033,7 @@ background: rgb(62, 240, 136);
         border-radius: 5px;
         padding: 10px;
         margin-bottom: 10px;
-        height: 300px; /* Altura fija para la caja de chat */
+        height: 450px; /* Altura fija para la caja de chat */
         overflow-y: auto; /* Barra de scroll cuando el contenido excede la altura */
     }
 
