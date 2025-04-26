@@ -699,6 +699,7 @@ footer{
     display: flex;
     flex-direction: column;
     gap: 10px;
+    heigght:800px;
 }
 #user-input:focus{
     border:1.0px #06ef7b solid;
