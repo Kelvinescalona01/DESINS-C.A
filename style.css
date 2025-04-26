@@ -9,7 +9,9 @@ body{
     color: #333;
     background-color: #cceaf0;
 }
-
+h1{
+    font-family: roboto;
+}
 .navbar{
     display: flex;
   
@@ -87,7 +89,7 @@ body{
     
 }
 h2{
-    font-family: cursive;
+    font-family: roboto;
 }
 .hero h1{
     font-size: 2.5rem;
@@ -703,12 +705,12 @@ footer{
 }
 
 #chat-box {
-    height: 300px;
+    height: 800px;
     overflow-y: auto;
     border: 1px solid #6b6969;
     border-radius: 5px;
     padding: 10px;
-    background: #858484;
+    background: #c9c8c8;
 }
 
 #chat-box .message {
@@ -1062,27 +1064,117 @@ background: rgb(62, 240, 136);
     }
 
     
-    /* Estilos para la animación del botón de compra */
-.compra.comprado {
-    background-color: #28a745; /* Cambia el color de fondo a verde, por ejemplo */
+    
+    /* Estilos para el overlay del formulario */
+#payment-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente oscuro */
+    display: none; /* Oculto por defecto */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+    backdrop-filter: blur(5px); /* Efecto de desenfoque opcional */
+}
+
+/* Estilos para el contenedor del formulario */
+#payment-form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%; /* Ancho responsivo */
+    transform: scale(0.9); /* Iniciar ligeramente más pequeño para la animación */
+    opacity: 0; /* Iniciar invisible para la animación */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Transición suave */
+}
+
+/* Estilo cuando el formulario está visible */
+#payment-form-overlay.visible #payment-form-container {
+    transform: scale(1); /* Escala normal */
+    opacity: 1; /* Visible */
+}
+
+/* Estilos para los grupos de formulario */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluir padding y borde en el ancho */
+    font-size: 1rem;
+}
+
+/* Estilos para los botones de acción */
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-around; /* Espacio entre botones */
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#process-payment {
+    background-color: #5cb85c; /* Verde */
     color: white;
-    transform: scale(1.05); /* Ligeramente más grande */
-    transition: all 0.3s ease-in-out; /* Añade una transición suave */
 }
 
-/* Opcional: Añadir una animación de pulsación */
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 15px rgba(40, 167, 69, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
-    }
+#process-payment:hover {
+    background-color: #4cae4c;
 }
 
-.compra.comprado {
-    animation: pulse 1s infinite; /* Aplica la animación de pulsación */
+#cancel-payment {
+    background-color: #d9534f; /* Rojo */
+    color: white;
+}
+
+#cancel-payment:hover {
+    background-color: #c9302c;
+}
+
+/* Asegurar que el loader esté oculto por defecto y visible con la clase 'visible' */
+#dynamic-loader-overlay {
+     display: none; /* Asegúrate de que esté aquí también, o elimina el display:flex inicial en tu CSS si lo tienes */
+     /* Tus otros estilos para centrar y la animación del spinner deben estar aquí */
+     position: fixed; /* Asegúrate de que esté fixed para cubrir toda la pantalla */
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente para el loader */
+     z-index: 2000; /* Mayor que el formulario para que se vea encima */
+     justify-content: center; /* Centrar contenido */
+     align-items: center; /* Centrar contenido */
+}
+
+#dynamic-loader-overlay.visible {
+    display: flex; /* Mostrar cuando la clase visible esté presente */
+}
+.nn{
+    text-decoration: none;
+    color: white ;
 }

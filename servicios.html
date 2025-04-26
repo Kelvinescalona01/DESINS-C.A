@@ -120,7 +120,29 @@
             </div>
                 
         
-              
+            <div id="payment-form-overlay">
+                <div id="payment-form-container">
+                    <h2>Información de Pago</h2>
+                    <form id="credit-card-form">
+                        <div class="form-group">
+                            <label for="card-number">Número de Tarjeta:</label>
+                            <input type="text" id="card-number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiry-date">Fecha de Vencimiento (MM/AA):</label>
+                            <input type="text" id="expiry-date" placeholder="MM/AA" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV:</label>
+                            <input type="text" id="cvv" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" id="process-payment"><a class="nn" href="servicios.html">Pagar</a></button>
+                            <button type="button" id="cancel-payment">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
            
 
 

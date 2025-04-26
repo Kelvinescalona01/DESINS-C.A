@@ -387,29 +387,122 @@ document.addEventListener("DOMContentLoaded", () => {
 }); // Fin del evento DOMContentLoaded
 
 
-// --- Código para los botones de compra ---
+ 
+// --- Código MODIFICADO para los botones de compra y formulario de pago ---
+
+// Selecciona todos los botones con la clase "compra"
 const comprarButtons = document.querySelectorAll(".compra");
+// Selecciona el overlay del formulario de pago
+const paymentFormOverlay = document.getElementById("payment-form-overlay");
+// Selecciona el formulario de tarjeta de crédito
+const creditCardForm = document.getElementById("credit-card-form");
+// Selecciona el botón de cancelar
+const cancelButton = document.getElementById("cancel-payment");
+// Selecciona el overlay del loader dinámico
+const dynamicLoaderOverlay = document.getElementById("dynamic-loader-overlay");
 
-if (comprarButtons) {
+// Selecciona los campos del formulario para validación
+const cardNumberInput = document.getElementById("card-number");
+const expiryDateInput = document.getElementById("expiry-date");
+const cvvInput = document.getElementById("cvv");
+
+
+// Verifica que todos los elementos necesarios existan antes de agregar event listeners
+if (comprarButtons.length > 0 && paymentFormOverlay && creditCardForm && cancelButton && dynamicLoaderOverlay && cardNumberInput && expiryDateInput && cvvInput) {
+
+    // Agrega event listener a cada botón de "Comprar plan"
     comprarButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            // Añadir clase para la animación
-            button.classList.add("comprado");
+        button.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevenir el comportamiento por defecto si lo tuviera
 
-            // Mostrar mensaje de éxito (puedes ajustar el mensaje si quieres)
-            const originalText = button.textContent;
-            button.textContent = "¡Comprado exitosamente!";
+            // Ocultar el loader si estaba visible por alguna razón previa
+            dynamicLoaderOverlay.classList.remove('visible');
 
-            // Opcional: deshabilitar el botón temporalmente para evitar clics múltiples
-            button.disabled = true;
-
-            // Eliminar la clase de animación y restaurar el texto original después de un tiempo
+            // Mostrar el overlay y el formulario de pago con una pequeña demora para la animación
+            paymentFormOverlay.style.display = "flex";
+            // Usa setTimeout para permitir que el display: flex se aplique antes de añadir la clase visible
             setTimeout(() => {
-                button.classList.remove("comprado");
-                button.textContent = originalText;
-                button.disabled = false; // Habilitar el botón de nuevo
-            }, 2000); // 2000 milisegundos = 2 segundos
+                 paymentFormOverlay.classList.add('visible');
+            }, 10); // Una pequeña demora (10ms) es suficiente
+
+            // Opcional: podrías guardar qué plan se está comprando si tuvieras IDs o atributos de datos
+            // const planId = button.dataset.planId;
+            // creditCardForm.setAttribute('data-buying-plan', planId);
         });
     });
+
+    // Event listener para el envío del formulario de tarjeta de crédito
+    creditCardForm.addEventListener("submit", (event) => {
+        event.preventDefault(); // Prevenir el envío real del formulario
+
+        // --- Validación básica en el frontend ---
+        if (!cardNumberInput.value || !expiryDateInput.value || !cvvInput.value) {
+            alert("Por favor, completa todos los campos de la tarjeta.");
+            return; // Detiene la función si los campos están vacíos
+        }
+
+        // --- SIMULACIÓN de procesamiento de pago ---
+        // En una aplicación real, aquí enviarías los datos (de forma segura) a tu backend
+        // para interactuar con una pasarela de pago (Stripe, PayPal, etc.).
+        // NUNCA proceses ni almacenes datos de tarjetas de crédito directamente en el frontend.
+
+        // Ocultar el formulario y mostrar el loader dinámico para simular procesamiento
+        paymentFormOverlay.classList.remove('visible'); // Iniciar la animación de salida del formulario
+        // Usa setTimeout para permitir que la animación de salida comience antes de ocultar
+        setTimeout(() => {
+            paymentFormOverlay.style.display = "none"; // Ocultar completamente después de la animación
+             // Mostrar el loader dinámico
+            dynamicLoaderOverlay.classList.add('visible');
+        }, 300); // La duración debe coincidir con la transición CSS del formulario
+
+        // SIMULACIÓN de espera del procesamiento (por ejemplo, 3 segundos)
+        setTimeout(() => {
+            // Ocultar el loader después de la simulación de procesamiento
+            dynamicLoaderOverlay.classList.remove('visible');
+             // Usa setTimeout para permitir que la animación de salida comience antes de ocultar
+            setTimeout(() => {
+                dynamicLoaderOverlay.style.display = "none";
+            }, 300); // La duración debe coincidir con tu animación de salida del loader si la tienes
+
+
+            // --- Lógica después de la SIMULACIÓN de procesamiento ---
+            // En un caso real, aquí manejarías la respuesta de la pasarela de pago (éxito/error)
+
+            alert("¡ pago completado! (Tus Datos no seran procesados ni almacenados)"); // Mensaje de éxito simulado
+
+            creditCardForm.reset(); // Limpiar el formulario después de la simulación
+
+            // Opcional: Redirigir al usuario a una página de confirmación o mostrar un mensaje en la página
+        }, 3000); // Simula un tiempo de procesamiento de 3 segundos
+    });
+
+    // Event listener para el botón de cancelar
+    cancelButton.addEventListener("click", () => {
+        // Ocultar el formulario con animación
+        paymentFormOverlay.classList.remove('visible');
+         // Usa setTimeout para permitir que la animación de salida comience antes de ocultar
+        setTimeout(() => {
+            paymentFormOverlay.style.display = "none"; // Ocultar completamente después de la animación
+        }, 300); // La duración debe coincidir con la transición CSS del formulario
+
+        creditCardForm.reset(); // Limpiar el formulario
+    });
+
+    // Event listener para cerrar el formulario haciendo clic fuera de él
+     paymentFormOverlay.addEventListener('click', (event) => {
+        // Si el clic fue directamente en el overlay (no dentro del contenedor del formulario)
+        if (event.target === paymentFormOverlay) {
+            // Ocultar el formulario con animación
+            paymentFormOverlay.classList.remove('visible');
+            setTimeout(() => {
+                paymentFormOverlay.style.display = "none";
+            }, 300); // Coincide con la transición CSS
+
+            creditCardForm.reset(); // Limpiar el formulario
+        }
+    });
+
+
+} else {
+    console.error("No se encontraron todos los elementos necesarios (botones .compra, #payment-form-overlay, #credit-card-form, #cancel-payment, #dynamic-loader-overlay) en el DOM.");
 }
-// --- Fin Código botones de compra ---
